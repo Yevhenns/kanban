@@ -74,7 +74,7 @@ const onEnd = () => {
 }
 
 th {
-  background-color: #3498db;
+  background-color: var(--color-green-600);
   color: white;
   padding: 12px 20px;
   text-align: left;

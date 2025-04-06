@@ -44,38 +44,41 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="page">
-    <div class="controls">
-      <p>{{ isCreateModalShown }}</p>
-      <UButton label="Створити проект" @click="toggleIsCreateModalShown" />
+  <UContainer class="py-2">
+    <div class="page">
+      <div class="controls">
+        <UButton label="Створити проект" @click="toggleIsCreateModalShown" />
+        <UInput id="filter" v-model="filter" placeholder="Фільтр" />
+      </div>
 
-      <UInput id="filter" v-model="filter" placeholder="Фільтр" />
+      <ProjectTable v-if="projectsStore.filteredProjects.length > 0" />
+
+      <h2
+        v-if="
+          projectsStore.filteredProjects.length === 0 &&
+          !projectsStore.isLoadingProjects
+        "
+        class="title"
+      >
+        Немає проектів
+      </h2>
+
+      <UModal v-model:open="projectsStore.isLoadingProjects" :close="false">
+        <template #body>
+          <UProgress animation="swing" />
+        </template>
+      </UModal>
+
+      <UModal v-model:open="isCreateModalShown" title="Створити проект">
+        <template #body>
+          <ProjectCreateForm
+            :toggleIsCreateModalShown
+            @projectCreated="refreshProjects"
+          />
+        </template>
+      </UModal>
     </div>
-
-    <ProjectsTable v-if="projectsStore.filteredProjects.length > 0" />
-
-    <h2
-      v-if="
-        projectsStore.filteredProjects.length === 0 &&
-        !projectsStore.isLoadingProjects
-      "
-      class="title"
-    >
-      Немає проектів
-    </h2>
-
-    <SharedSpinner v-if="projectsStore.isLoadingProjects" />
-
-    <UModal v-model:open="isCreateModalShown" title="Створити проект">
-      <UButton label="Створити проект" color="neutral" variant="subtle" />
-      <template #body>
-        <ProjectCreateForm
-          :toggleIsCreateModalShown
-          @projectCreated="refreshProjects"
-        />
-      </template>
-    </UModal>
-  </div>
+  </UContainer>
 </template>
 
 <style scoped lang="css">

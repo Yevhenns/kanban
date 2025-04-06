@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { deleteProjectById } from "@/api/api";
-import AppButton from "@/components/shared/AppButton.vue";
-import CreateTaskForm from "@/components/tasks/CreateTaskForm.vue";
-import ModalWrapper from "@/components/shared/ModalWrapper.vue";
-import TasksColumns from "@/components/tasks/TasksColumns.vue";
-import { useProjectsStore } from "@/stores/projects";
-import { useTasksStore } from "@/stores/tasks";
+
 import { onMounted, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
-import AppSpinner from "@/components/shared/AppSpinner.vue";
+import { useProjectsStore } from "~/stores/projects";
+import { useTasksStore } from "~/stores/tasks";
 
 const projectsStore = useProjectsStore();
 const tasksStore = useTasksStore();
@@ -68,10 +64,10 @@ watchEffect(() => {
     </div>
 
     <div class="project-actions">
-      <AppButton type="button" @click="toggleIsCreateModalShown"
-        >Створити завдання</AppButton
-      >
-      <AppButton @click="deleteProject">Видалити проект</AppButton>
+      <UButton type="button" @click="toggleIsCreateModalShown">
+        Створити завдання
+      </UButton>
+      <UButton @click="deleteProject"> Видалити проект </UButton>
     </div>
 
     <ModalWrapper
@@ -79,7 +75,7 @@ watchEffect(() => {
       :isCreateModalShown
       :toggleIsCreateModalShown
     >
-      <CreateTaskForm
+      <TasksCreateForm
         :toggleIsCreateModalShown
         :project="projectsStore.currentProject"
         @taskCreated="refreshTasks"
@@ -92,7 +88,7 @@ watchEffect(() => {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped lang="css">
 .project-page {
   display: flex;
   flex-direction: column;
