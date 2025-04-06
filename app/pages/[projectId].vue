@@ -60,11 +60,11 @@ watchEffect(() => {
         <p>Опис: {{ projectsStore.currentProject?.description }}</p>
         <p>Статус: {{ projectsStore.currentProject?.status }}</p>
         <p>Створено: {{ projectsStore.currentProject?.createdAt }}</p>
-        <div class="project-actions">
-          <!-- <UButton type="button" @click="toggleIsCreateModalShown">
-          Створити завдання
-        </UButton> -->
-          <UButton @click="deleteProject"> Видалити проект </UButton>
+        <div class="flex gap-8">
+          <UButton color="warning">Редагувати проект</UButton>
+          <UButton color="error" @click="deleteProject"
+            >Видалити проект</UButton
+          >
         </div>
       </div>
 
@@ -134,11 +134,5 @@ watchEffect(() => {
   strong {
     font-weight: bold;
   }
-}
-
-.project-actions {
-  display: flex;
-  gap: 20px;
-  justify-content: flex-start;
 }
 </style>
