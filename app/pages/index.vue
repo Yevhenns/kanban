@@ -17,12 +17,12 @@ const refreshProjects = async () => {
   if (res) projectsStore.filteredProjects = projectsStore.projects;
 };
 
-if (process.client && history.state.project === "deleted") {
+if (import.meta.client && history.state.project === "deleted") {
   // toast.success("Проект видалено!", { autoClose: 2000 });
   history.replaceState({}, "");
 }
 
-if (process.client && history.state.project === "was deleted") {
+if (import.meta.client && history.state.project === "was deleted") {
   // toast.error("Проект було видалено!", { autoClose: 2000 });
   history.replaceState({}, "");
 }
