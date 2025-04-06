@@ -1,23 +1,132 @@
+<script setup lang="ts">
+import { deleteProjectById } from "@/api/api";
+import AppButton from "@/components/shared/AppButton.vue";
+import CreateTaskForm from "@/components/tasks/CreateTaskForm.vue";
+import ModalWrapper from "@/components/shared/ModalWrapper.vue";
+import TasksColumns from "@/components/tasks/TasksColumns.vue";
+import { useProjectsStore } from "@/stores/projects";
+import { useTasksStore } from "@/stores/tasks";
+import { onMounted, ref, watchEffect } from "vue";
+import { useRouter } from "vue-router";
+import AppSpinner from "@/components/shared/AppSpinner.vue";
+
+const projectsStore = useProjectsStore();
+const tasksStore = useTasksStore();
+
+const router = useRouter();
+
+const isCreateModalShown = ref(false);
+
+const toggleIsCreateModalShown = () => {
+  isCreateModalShown.value = !isCreateModalShown.value;
+};
+
+const refreshTasks = async () => {
+  try {
+    const response = await projectsStore.getProjectsList();
+    if (response) {
+      await tasksStore.getAllTasks();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const deleteProject = async () => {
+  if (projectsStore.currentProject) {
+    try {
+      await deleteProjectById(projectsStore.currentProject?.id);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      router.push({ path: "/", state: { project: "deleted" } });
+    }
+  }
+};
+
+onMounted(async () => {
+  await projectsStore.getProjectsList();
+  await tasksStore.getAllTasks();
+  if (projectsStore.currentProjectId && !projectsStore.currentProject) {
+    projectsStore.setCurrentProjectId(null);
+  }
+});
+
+watchEffect(() => {
+  if (!projectsStore.currentProjectId) router.push("/");
+});
+</script>
+
 <template>
-  <div class="flex flex-col items-center justify-center gap-4 h-screen">
-    <h1 class="font-bold text-2xl text-(--ui-primary)">Nuxt UI - Starter</h1>
-
-    <div class="flex items-center gap-2">
-      <UButton
-        label="Documentation"
-        icon="i-lucide-square-play"
-        to="https://ui.nuxt.com/getting-started/installation/nuxt"
-        target="_blank"
-      />
-
-      <UButton
-        label="GitHub"
-        color="neutral"
-        variant="outline"
-        icon="i-simple-icons-github"
-        to="https://github.com/nuxt/ui"
-        target="_blank"
-      />
+  <div>
+    <div class="project-info">
+      <h1>Сторінка проекту "{{ projectsStore.currentProject?.title }}"</h1>
+      <p>ID: {{ projectsStore.currentProject?.id }}</p>
+      <p>Опис: {{ projectsStore.currentProject?.description }}</p>
+      <p>Статус: {{ projectsStore.currentProject?.status }}</p>
+      <p>Створено: {{ projectsStore.currentProject?.createdAt }}</p>
     </div>
+
+    <div class="project-actions">
+      <AppButton type="button" @click="toggleIsCreateModalShown"
+        >Створити завдання</AppButton
+      >
+      <AppButton @click="deleteProject">Видалити проект</AppButton>
+    </div>
+
+    <ModalWrapper
+      v-if="projectsStore.currentProject"
+      :isCreateModalShown
+      :toggleIsCreateModalShown
+    >
+      <CreateTaskForm
+        :toggleIsCreateModalShown
+        :project="projectsStore.currentProject"
+        @taskCreated="refreshTasks"
+      />
+    </ModalWrapper>
+
+    <TasksColumns />
+
+    <AppSpinner v-if="tasksStore.isLoadingTasks" />
   </div>
 </template>
+
+<style scoped lang="scss">
+.project-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.project-info {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+}
+
+.project-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-start;
+}
+</style>
