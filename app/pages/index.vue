@@ -43,76 +43,56 @@ onMounted(async () => {
 </script>
 
 <template>
-  <UContainer class="py-4">
-    <div class="page">
-      <div class="controls">
-        <UButton label="Створити проект" @click="toggleCreateModal" />
-        <UInput
-          id="filter"
-          v-model="filter"
-          placeholder="Фільтр"
-          aria-label="filter"
-        />
-      </div>
-
-      <ProjectsTable v-if="projectsStore.filteredProjects.length > 0" />
-
-      <h2
-        v-if="
-          projectsStore.filteredProjects.length === 0 &&
-          !projectsStore.isLoadingProjects
-        "
-        class="title"
-      >
-        Немає проектів
-      </h2>
-
-      <UModal
-        v-model:open="projectsStore.isLoadingProjects"
-        :close="false"
-        title="Завантаження проектів"
-      >
-        <template #description>
-          <span class="sr-only">Завантаження проектів</span>
-        </template>
-        <template #body>
-          <UProgress animation="swing" />
-        </template>
-      </UModal>
-
-      <UModal v-model:open="isCreateModalShown" title="Створити проект">
-        <template #description>
-          <span class="sr-only">Створити проект</span>
-        </template>
-        <template #body>
-          <ProjectsCreateForm
-            :toggle-create-modal="toggleCreateModal"
-            @project-created="refreshProjects"
-          />
-        </template>
-      </UModal>
+  <UContainer>
+    <div class="flex gap-4 py-4">
+      <UButton label="Створити проект" @click="toggleCreateModal" />
+      <UInput
+        id="filter"
+        v-model="filter"
+        placeholder="Фільтр"
+        aria-label="filter"
+      />
     </div>
+
+    <ProjectsTable v-if="projectsStore.filteredProjects.length > 0" />
+
+    <UModal
+      v-model:open="projectsStore.isLoadingProjects"
+      :close="false"
+      title="Завантаження проектів"
+    >
+      <template #description>
+        <span class="sr-only">Завантаження проектів</span>
+      </template>
+      <template #body>
+        <UProgress animation="swing" />
+      </template>
+    </UModal>
+
+    <h2
+      v-if="
+        !projectsStore.isLoadingProjects &&
+        projectsStore.filteredProjects.length === 0
+      "
+      class="text-2xl text-center"
+    >
+      Немає проектів
+    </h2>
+
+    <UModal
+      v-model:open="isCreateModalShown"
+      title="Створити проект"
+      class="max-w-100"
+    >
+      <template #description>
+        <span class="sr-only">Створити проект</span>
+      </template>
+      <template #body>
+        <ProjectsCreateForm
+          :toggle-create-modal="toggleCreateModal"
+          @project-created="refreshProjects"
+        />
+      </template>
+    </UModal>
   </UContainer>
 </template>
-
-<style scoped lang="css">
-.page {
-  .controls {
-    align-items: center;
-    justify-content: flex-start;
-    display: flex;
-    margin-bottom: 20px;
-    gap: 20px;
-  }
-
-  .filter-input {
-    width: 200px;
-  }
-
-  .heading {
-    text-align: center;
-    font-size: 24px;
-    font-weight: 600;
-  }
-}
-</style>

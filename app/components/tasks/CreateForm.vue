@@ -85,11 +85,19 @@ defineExpose({ unmaskedDeadline });
     @submit="createNewTask"
   >
     <UFormField label="Назва завдання" name="title">
-      <UInput v-model="state.title" placeholder="Введіть назву завдання" />
+      <UInput
+        v-model="state.title"
+        placeholder="Введіть назву завдання"
+        class="w-full"
+      />
     </UFormField>
 
     <UFormField label="Опис завданняя" name="description">
-      <UInput v-model="state.description" placeholder="Введіть опис проекту" />
+      <UInput
+        v-model="state.description"
+        placeholder="Введіть опис проекту"
+        class="w-full"
+      />
     </UFormField>
 
     <UFormField label="Вибір виконавця:" name="assignee">
@@ -97,7 +105,7 @@ defineExpose({ unmaskedDeadline });
         v-model="state.assignee"
         placeholder="Оберіть зі списку"
         :items="assignees"
-        class="w-48"
+        class="w-full"
       />
     </UFormField>
 
@@ -106,19 +114,15 @@ defineExpose({ unmaskedDeadline });
         v-model="state.maskedDeadline"
         v-maska:unmaskedDeadline.unmasked="'####-##-##'"
         placeholder="РРРР-ММ-ДД"
+        class="w-full"
       />
     </UFormField>
 
-    <UButton :loading="isLoading" type="submit">Створити</UButton>
+    <UButton
+      :loading="isLoading"
+      type="submit"
+      class="w-full text-center flex justify-center items-center"
+      >Створити</UButton
+    >
   </UForm>
 </template>
-
-<style scoped lang="css">
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  text-align: left;
-  max-width: 400px;
-}
-</style>

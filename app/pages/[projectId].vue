@@ -60,19 +60,19 @@ watchEffect(() => {
         <p>Опис: {{ projectsStore.currentProject?.description }}</p>
         <p>Статус: {{ projectsStore.currentProject?.status }}</p>
         <p>Створено: {{ projectsStore.currentProject?.createdAt }}</p>
-      </div>
-
-      <div class="project-actions">
-        <!-- <UButton type="button" @click="toggleIsCreateModalShown">
-        Створити завдання
-      </UButton> -->
-        <UButton @click="deleteProject"> Видалити проект </UButton>
+        <div class="project-actions">
+          <!-- <UButton type="button" @click="toggleIsCreateModalShown">
+          Створити завдання
+        </UButton> -->
+          <UButton @click="deleteProject"> Видалити проект </UButton>
+        </div>
       </div>
 
       <UModal
         v-if="projectsStore.currentProject"
         v-model:open="createModalShown"
         title="Створити проект"
+        class="max-w-100"
       >
         <template #description>
           <span class="sr-only">Створити проект</span>
