@@ -43,11 +43,16 @@ onMounted(async () => {
 </script>
 
 <template>
-  <UContainer class="py-2">
+  <UContainer class="py-4">
     <div class="page">
       <div class="controls">
         <UButton label="Створити проект" @click="toggleCreateModal" />
-        <UInput id="filter" v-model="filter" placeholder="Фільтр" />
+        <UInput
+          id="filter"
+          v-model="filter"
+          placeholder="Фільтр"
+          aria-label="filter"
+        />
       </div>
 
       <ProjectsTable v-if="projectsStore.filteredProjects.length > 0" />
@@ -62,13 +67,23 @@ onMounted(async () => {
         Немає проектів
       </h2>
 
-      <UModal v-model:open="projectsStore.isLoadingProjects" :close="false">
+      <UModal
+        v-model:open="projectsStore.isLoadingProjects"
+        :close="false"
+        title="Завантаження проектів"
+      >
+        <template #description>
+          <span class="sr-only">Завантаження проектів</span>
+        </template>
         <template #body>
           <UProgress animation="swing" />
         </template>
       </UModal>
 
       <UModal v-model:open="isCreateModalShown" title="Створити проект">
+        <template #description>
+          <span class="sr-only">Створити проект</span>
+        </template>
         <template #body>
           <ProjectsCreateForm
             :toggle-create-modal="toggleCreateModal"

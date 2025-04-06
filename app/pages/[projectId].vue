@@ -52,44 +52,56 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div>
-    <div class="project-info">
-      <h1>Сторінка проекту "{{ projectsStore.currentProject?.title }}"</h1>
-      <p>ID: {{ projectsStore.currentProject?.id }}</p>
-      <p>Опис: {{ projectsStore.currentProject?.description }}</p>
-      <p>Статус: {{ projectsStore.currentProject?.status }}</p>
-      <p>Створено: {{ projectsStore.currentProject?.createdAt }}</p>
-    </div>
+  <UContainer class="py-4">
+    <div>
+      <div class="project-info">
+        <h1>Сторінка проекту "{{ projectsStore.currentProject?.title }}"</h1>
+        <p>ID: {{ projectsStore.currentProject?.id }}</p>
+        <p>Опис: {{ projectsStore.currentProject?.description }}</p>
+        <p>Статус: {{ projectsStore.currentProject?.status }}</p>
+        <p>Створено: {{ projectsStore.currentProject?.createdAt }}</p>
+      </div>
 
-    <div class="project-actions">
-      <!-- <UButton type="button" @click="toggleIsCreateModalShown">
+      <div class="project-actions">
+        <!-- <UButton type="button" @click="toggleIsCreateModalShown">
         Створити завдання
       </UButton> -->
-      <UButton @click="deleteProject"> Видалити проект </UButton>
+        <UButton @click="deleteProject"> Видалити проект </UButton>
+      </div>
+
+      <UModal
+        v-if="projectsStore.currentProject"
+        v-model:open="createModalShown"
+        title="Створити проект"
+      >
+        <template #description>
+          <span class="sr-only">Створити проект</span>
+        </template>
+        <template #body>
+          <TasksCreateForm
+            :toggle-create-modal="toggleCreateModal"
+            :project="projectsStore.currentProject"
+            @project-created="refreshTasks"
+          />
+        </template>
+      </UModal>
+
+      <TasksColumns :toggle-create-modal="toggleCreateModal" />
+
+      <UModal
+        v-model:open="tasksStore.isLoadingTasks"
+        :close="false"
+        title="Завантаження завдань"
+      >
+        <template #description>
+          <span class="sr-only">Завантаження завдань</span>
+        </template>
+        <template #body>
+          <UProgress animation="swing" />
+        </template>
+      </UModal>
     </div>
-
-    <UModal
-      v-if="projectsStore.currentProject"
-      v-model:open="createModalShown"
-      title="Створити проект"
-    >
-      <template #body>
-        <TasksCreateForm
-          :toggle-create-modal="toggleCreateModal"
-          :project="projectsStore.currentProject"
-          @project-created="refreshTasks"
-        />
-      </template>
-    </UModal>
-
-    <TasksColumns :toggle-create-modal="toggleCreateModal" />
-
-    <UModal v-model:open="tasksStore.isLoadingTasks" :close="false">
-      <template #body>
-        <UProgress animation="swing" />
-      </template>
-    </UModal>
-  </div>
+  </UContainer>
 </template>
 
 <style scoped lang="css">
