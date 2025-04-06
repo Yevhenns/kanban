@@ -64,9 +64,9 @@ watchEffect(() => {
     </div>
 
     <div class="project-actions">
-      <UButton type="button" @click="toggleIsCreateModalShown">
+      <!-- <UButton type="button" @click="toggleIsCreateModalShown">
         Створити завдання
-      </UButton>
+      </UButton> -->
       <UButton @click="deleteProject"> Видалити проект </UButton>
     </div>
 
@@ -82,7 +82,7 @@ watchEffect(() => {
       />
     </ModalWrapper>
 
-    <TasksColumns />
+    <TasksColumns :toggleIsCreateModalShown />
 
     <AppSpinner v-if="tasksStore.isLoadingTasks" />
   </div>

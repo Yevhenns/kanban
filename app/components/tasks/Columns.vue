@@ -3,6 +3,10 @@ import { computed } from "vue";
 import { useTasksStore } from "@/stores/tasks";
 import { useProjectsStore } from "@/stores/projects";
 
+defineProps<{
+  toggleIsCreateModalShown: () => void;
+}>();
+
 const projectsStore = useProjectsStore();
 const tasksStore = useTasksStore();
 
@@ -14,11 +18,10 @@ const tasks = computed(() => {
 </script>
 
 <template>
-  <h2 v-if="tasks.length === 0" class="heading">Немає завдань</h2>
-  <div v-if="tasks.length > 0">
+  <div>
     <h2 class="heading">Завдання</h2>
     <div class="columnsWrapper">
-      <TasksColumnItem :tasks="tasks" status="todo" />
+      <TasksColumnItem :tasks="tasks" status="todo" :toggleIsCreateModalShown />
       <TasksColumnItem :tasks="tasks" status="in_progress" />
       <TasksColumnItem :tasks="tasks" status="done" />
     </div>

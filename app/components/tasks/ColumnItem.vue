@@ -9,6 +9,7 @@ import { VueDraggable, type SortableEvent } from "vue-draggable-plus";
 const props = defineProps<{
   status: Status;
   tasks: Task[];
+  toggleIsCreateModalShown?: () => void;
 }>();
 
 const projectsStore = useProjectsStore();
@@ -88,6 +89,13 @@ watchEffect(() => {
 <template>
   <div class="column" :data-status="status">
     <h3 class="title">{{ columnName }}</h3>
+    <UButton
+      v-if="status === 'todo'"
+      type="button"
+      @click="toggleIsCreateModalShown"
+    >
+      Створити завдання
+    </UButton>
     <VueDraggable
       class="card-wrapper"
       v-model="filteredTasks"
