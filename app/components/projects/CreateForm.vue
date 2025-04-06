@@ -5,7 +5,7 @@ import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
 const props = defineProps<{
-  toggleIsCreateModalShown: () => void;
+  toggleCreateModal: () => void;
 }>();
 
 const emit = defineEmits(["projectCreated"]);
@@ -25,11 +25,12 @@ const state = reactive<Partial<Schema>>({
 const isLoading = ref(false);
 
 const toast = useToast();
+
 const createNewProject = async (event: FormSubmitEvent<Schema>) => {
   isLoading.value = true;
   const project: ProjectDto = {
     title: event.data.title,
-    description: event.data.description,
+    description: event.data.description || "",
     createdAt: new Date().toISOString().split("T")[0] || "",
     status: "todo",
     tasks: [],
@@ -38,7 +39,7 @@ const createNewProject = async (event: FormSubmitEvent<Schema>) => {
     const res = await createProject(project);
     if (res) {
       emit("projectCreated");
-      props.toggleIsCreateModalShown();
+      props.toggleCreateModal();
     }
   } catch (e) {
     console.log(e);

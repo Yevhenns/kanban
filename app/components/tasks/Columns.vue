@@ -4,7 +4,7 @@ import { useTasksStore } from "@/stores/tasks";
 import { useProjectsStore } from "@/stores/projects";
 
 defineProps<{
-  toggleIsCreateModalShown: () => void;
+  toggleCreateModal: () => void;
 }>();
 
 const projectsStore = useProjectsStore();
@@ -21,7 +21,11 @@ const tasks = computed(() => {
   <div>
     <h2 class="heading">Завдання</h2>
     <div class="columnsWrapper">
-      <TasksColumnItem :tasks="tasks" status="todo" :toggleIsCreateModalShown />
+      <TasksColumnItem
+        :tasks="tasks"
+        status="todo"
+        :toggle-create-modal="toggleCreateModal"
+      />
       <TasksColumnItem :tasks="tasks" status="in_progress" />
       <TasksColumnItem :tasks="tasks" status="done" />
     </div>

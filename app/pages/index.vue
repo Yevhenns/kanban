@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useProjectsStore } from "~/stores/projects";
-import { useTasksStore } from "~/stores/tasks";
+const toast = useToast();
 
 const projectsStore = useProjectsStore();
 const tasksStore = useTasksStore();
@@ -8,7 +7,7 @@ const tasksStore = useTasksStore();
 const isCreateModalShown = ref(false);
 const filter = ref("");
 
-const toggleIsCreateModalShown = () => {
+const toggleCreateModal = () => {
   isCreateModalShown.value = !isCreateModalShown.value;
 };
 
@@ -18,12 +17,12 @@ const refreshProjects = async () => {
 };
 
 if (import.meta.client && history.state.project === "deleted") {
-  // toast.success("Проект видалено!", { autoClose: 2000 });
+  toast.add({ title: "Проект видалено!", color: "success" });
   history.replaceState({}, "");
 }
 
 if (import.meta.client && history.state.project === "was deleted") {
-  // toast.error("Проект було видалено!", { autoClose: 2000 });
+  toast.add({ title: "Проект було видалено!", color: "error" });
   history.replaceState({}, "");
 }
 
@@ -47,11 +46,11 @@ onMounted(async () => {
   <UContainer class="py-2">
     <div class="page">
       <div class="controls">
-        <UButton label="Створити проект" @click="toggleIsCreateModalShown" />
+        <UButton label="Створити проект" @click="toggleCreateModal" />
         <UInput id="filter" v-model="filter" placeholder="Фільтр" />
       </div>
 
-      <ProjectTable v-if="projectsStore.filteredProjects.length > 0" />
+      <ProjectsTable v-if="projectsStore.filteredProjects.length > 0" />
 
       <h2
         v-if="
@@ -71,9 +70,9 @@ onMounted(async () => {
 
       <UModal v-model:open="isCreateModalShown" title="Створити проект">
         <template #body>
-          <ProjectCreateForm
-            :toggleIsCreateModalShown
-            @projectCreated="refreshProjects"
+          <ProjectsCreateForm
+            :toggle-create-modal="toggleCreateModal"
+            @project-created="refreshProjects"
           />
         </template>
       </UModal>

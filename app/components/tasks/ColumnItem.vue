@@ -9,7 +9,7 @@ import { VueDraggable, type SortableEvent } from "vue-draggable-plus";
 const props = defineProps<{
   status: Status;
   tasks: Task[];
-  toggleIsCreateModalShown?: () => void;
+  toggleCreateModal?: () => void;
 }>();
 
 const projectsStore = useProjectsStore();
@@ -89,25 +89,21 @@ watchEffect(() => {
 <template>
   <div class="column" :data-status="status">
     <h3 class="title">{{ columnName }}</h3>
-    <UButton
-      v-if="status === 'todo'"
-      type="button"
-      @click="toggleIsCreateModalShown"
-    >
+    <UButton v-if="status === 'todo'" type="button" @click="toggleCreateModal">
       Створити завдання
     </UButton>
     <VueDraggable
-      class="card-wrapper"
       v-model="filteredTasks"
-      ghostClass="ghost"
+      class="card-wrapper"
+      ghost-class="ghost"
       group="tasks"
       @end="onEnd"
     >
       <div
-        :class="status"
-        class="card"
         v-for="task in filteredTasks"
         :key="task.id"
+        :class="status"
+        class="card"
         :data-id="task.id"
       >
         <p>ID: {{ task.id }}</p>
@@ -116,7 +112,7 @@ watchEffect(() => {
         <p>Срок виконання: {{ task.deadline }}</p>
         <p>Статус: {{ columnName }}</p>
         <button class="delete-btn" @click="deleteTask(task.id, task.projectId)">
-          <i class="pi pi-times" style="font-size: 16px"></i>
+          <i class="pi pi-times" style="font-size: 16px" />
         </button>
       </div>
     </VueDraggable>

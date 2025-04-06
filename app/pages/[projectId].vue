@@ -3,18 +3,16 @@ import { deleteProjectById } from "@/api/api";
 
 import { onMounted, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
-import { useProjectsStore } from "~/stores/projects";
-import { useTasksStore } from "~/stores/tasks";
 
 const projectsStore = useProjectsStore();
 const tasksStore = useTasksStore();
 
 const router = useRouter();
 
-const isCreateModalShown = ref(false);
+const createModalShown = ref(false);
 
-const toggleIsCreateModalShown = () => {
-  isCreateModalShown.value = !isCreateModalShown.value;
+const toggleCreateModal = () => {
+  createModalShown.value = !createModalShown.value;
 };
 
 const refreshTasks = async () => {
@@ -70,21 +68,27 @@ watchEffect(() => {
       <UButton @click="deleteProject"> Видалити проект </UButton>
     </div>
 
-    <ModalWrapper
+    <UModal
       v-if="projectsStore.currentProject"
-      :isCreateModalShown
-      :toggleIsCreateModalShown
+      v-model:open="createModalShown"
+      title="Створити проект"
     >
-      <TasksCreateForm
-        :toggleIsCreateModalShown
-        :project="projectsStore.currentProject"
-        @taskCreated="refreshTasks"
-      />
-    </ModalWrapper>
+      <template #body>
+        <TasksCreateForm
+          :toggle-create-modal="toggleCreateModal"
+          :project="projectsStore.currentProject"
+          @project-created="refreshTasks"
+        />
+      </template>
+    </UModal>
 
-    <TasksColumns :toggleIsCreateModalShown />
+    <TasksColumns :toggle-create-modal="toggleCreateModal" />
 
-    <AppSpinner v-if="tasksStore.isLoadingTasks" />
+    <UModal v-model:open="tasksStore.isLoadingTasks" :close="false">
+      <template #body>
+        <UProgress animation="swing" />
+      </template>
+    </UModal>
   </div>
 </template>
 

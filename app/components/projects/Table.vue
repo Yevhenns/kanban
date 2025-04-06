@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useProjectsStore } from "@/stores/projects";
 import { VueDraggable } from "vue-draggable-plus";
 import { useRouter } from "vue-router";
 
